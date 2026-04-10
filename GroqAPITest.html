@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Groq API Test</title>
+</head>
+<body>
+
+<h2>Groq Test</h2>
+
+<textarea id="prompt" rows="4" cols="50">
+Write a product ad for a red sneaker
+</textarea>
+
+<br><br>
+<button onclick="generate()">Generate</button>
+
+<pre id="output"></pre>
+
+<script>
+async function generate() {
+  const apiKey = "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";
+  const prompt = document.getElementById("prompt").value;
+
+  try {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + apiKey
+      },
+      body: JSON.stringify({
+        model: "llama-3.1-8b-instant",
+        messages: [
+          { role: "user", content: prompt }
+        ]
+      })
+    });
+
+    const data = await response.json();
+
+    console.log(data);
+
+    document.getElementById("output").innerText =
+      data.choices?.[0]?.message?.content ||
+      JSON.stringify(data, null, 2);
+
+  } catch (error) {
+    document.getElementById("output").innerText = error;
+  }
+}
+</script>
+
+</body>
+</html>
